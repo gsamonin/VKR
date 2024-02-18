@@ -12,24 +12,30 @@ CREATE table schedule(
     schedule_name varchar(50)
 );
 
-CREATE table vacancy_name(
+CREATE table cities(
+    id serial4 NOT NULL PRIMARY KEY,
+    city_name varchar
+);
+
+CREATE table vacancies(
     id serial4 NOT NULL PRIMARY KEY,
     vacancy_name varchar
 );
 
-CREATE table vacancies(
+CREATE table vacancy_info(
     id bigserial NOT NULL PRIMARY KEY,
-    fk_vacancy_name serial4,
+    fk_vacancy serial4,
     vacancy_date date, 
     vacancy_country varchar(30),
-    vacancy_city varchar(100),
+    vacancy_city serial4,
     vacancy_salary_from int,
     vacancy_salary_to int,
     vacancy_currency varchar(5),
     vacancy_gross boolean,
     fk_vacancy_schedule serial4,
+    FOREIGN KEY (vacancy_city) REFERENCES cities (id),
     FOREIGN KEY (fk_vacancy_schedule) REFERENCES schedule (id),
-    FOREIGN KEY (fk_vacancy_name) REFERENCES vacancy_name (id)
+    FOREIGN KEY (fk_vacancy) REFERENCES vacancies (id)
 );
 
 CREATE table skills(
