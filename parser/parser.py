@@ -22,7 +22,7 @@ def process_vacancy_skills(vacancy_id):
             compare_skill_embedding = model.encode(skill[1])
             cosine_sim = util.pytorch_cos_sim(skill_embedding, compare_skill_embedding)
             if cosine_sim >= 0.8:
-                done_list.append(skill[1])
+                done_list.append(skill[0])
     db_save_vacancy_skills(vacancy_id, done_list)
 
 
