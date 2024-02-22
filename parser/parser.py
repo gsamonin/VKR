@@ -32,11 +32,11 @@ def parse_vacancies():
             page = 0
             try:
                 while True:
-                    data = get_vacancies(city_id, vacancy[0], page)
+                    data = get_vacancies(city_id[1], vacancy[1], page)
                     if not data.get('items'):
                             break
                     for item in data['items']:
-                        db_save_vacancy_info(item)
+                        db_save_vacancy_info(item, vacancy[0] ,city_id[0])
                         process_vacancy_skills(item['id'])
                     page+=1
                     time.sleep(random.uniform(1, 2))

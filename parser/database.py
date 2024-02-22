@@ -29,11 +29,13 @@ def db_get_vacancy_list():
     con.close()
     return res
 
-def db_save_vacancy_info(vacancy, vacancy_name, vacancy_city):
+def db_save_vacancy_info(vacancy_info, vacancy_id, vacancy_city):
     con = psycopg2.connect(host=host, user=user, password=password, database=database,port=port)
     cur = con.cursor()
-    for skill_id in skillList:
-        cur.execute('INSERT INTO vacancy_skills (fk_vacancy, fk_skills) VALUES(%s,%s)', (vacancy_id, skill_id))
+    query = """INSERT INTO vacancy_info (fk_vacancy, vacancy_date, vacancy_country, vacancy_city, 
+    vacancy_salary_from, vacancy_salary_to, vacancy_currency, vacancy_gross, vacancy_gross,
+      fk_vacancy_schedule) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+    cur.execute(query, (vacancy_id, vacancy_info))
     con.commit()
     cur.close()
     con.close()
