@@ -7,10 +7,6 @@ EXECUTE 'DROP TABLE IF EXISTS public.' || quote_ident(r.tablename) || ' CASCADE'
 END LOOP;
 END $$;
 
-CREATE table schedule(
-    id serial4 NOT NULL PRIMARY KEY,
-    schedule_name varchar(50)
-);
 
 CREATE table cities(
     id serial4 NOT NULL PRIMARY KEY,
@@ -27,14 +23,12 @@ CREATE table vacancy_info(
     fk_vacancy serial4,
     vacancy_date date, 
     vacancy_country varchar(30),
-    vacancy_city serial4,
+    fk_vacancy_city serial4,
     vacancy_salary_from int,
     vacancy_salary_to int,
     vacancy_currency varchar(5),
     vacancy_gross boolean,
-    fk_vacancy_schedule serial4,
-    FOREIGN KEY (vacancy_city) REFERENCES cities (id),
-    FOREIGN KEY (fk_vacancy_schedule) REFERENCES schedule (id),
+    FOREIGN KEY (fk_vacancy_city) REFERENCES cities (id),
     FOREIGN KEY (fk_vacancy) REFERENCES vacancies (id)
 );
 
