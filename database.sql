@@ -41,7 +41,7 @@ CREATE table vacancy_skills(
     id serial4 NOT NULL PRIMARY KEY,
     fk_vacancy serial4,
     fk_skills serial4,
-    FOREIGN KEY (fk_vacancy) REFERENCES vacancies (id),
+    FOREIGN KEY (fk_vacancy) REFERENCES vacancy_info (id),
     FOREIGN KEY (fk_skills) REFERENCES skills (id)
 );
 
