@@ -1,9 +1,5 @@
 import psycopg2
 
-from tqdm.auto import tqdm
-from sentence_transformers import util
-from sentence_transformers import SentenceTransformer
-
 host = "127.0.0.1"
 user = "postgres"
 password = "postgres" 

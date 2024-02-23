@@ -2,11 +2,11 @@ import requests
 import time
 import random
 from database import *
-from sentence_transformers import util
-from sentence_transformers import SentenceTransformer
 import traceback
+from fuzzywuzzy import fuzz
+from fuzzywuzzy import process
 
-model = SentenceTransformer('sentence-transformers/all-mpnet-base-v2')
+#model = SentenceTransformer('sentence-transformers/all-mpnet-base-v2')
 
 def get_vacancies(cityName, cityId, vacancy, page):
     params = {'text': f"{vacancy} {cityName}", 'area': cityId, 'per_page': 2, 'page': page}
@@ -18,14 +18,10 @@ def process_vacancy_skills(vacancy_id):
     data = response.json()
     done_list = []
     for vacancy_skill in data['key_skills']:
-        print(vacancy_skill)
         for skill in db_get_skills():
-            skill_embedding = model.encode(vacancy_skill['name'])
-            compare_skill_embedding = model.encode(skill[1])
-            cosine_sim = util.pytorch_cos_sim(skill_embedding, compare_skill_embedding)
+            cosine_sim = fuzz.token_sort_ratio(vacancy_skill['name'], skill[1])
             print(cosine_sim)
-            if cosine_sim >= 0.8:
-                print('add')
+            if cosine_sim >= 70:
                 done_list.append(skill[0])
     db_save_vacancy_skills(vacancy_id, done_list)
 
@@ -45,7 +41,7 @@ def parse_vacancies():
                     page+=1
                     time.sleep(random.uniform(1, 2))
             except Exception:
-                print(Exception)
+                print('Жора лох')
                 traceback.print_exc()
 parse_vacancies()
 
