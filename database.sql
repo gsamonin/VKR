@@ -80,7 +80,7 @@ INSERT INTO public.vacancies
 VALUES(9, 'C++');
 INSERT INTO public.vacancies
 (id, vacancy_name)
-VALUES(10, 'C++ Junior');
+VALUES(10, 'C++ Junior'); 
 INSERT INTO public.vacancies
 (id, vacancy_name)
 VALUES(11, 'C++ Middle');

@@ -58,3 +58,12 @@ def db_get_skills():
     cur.close()
     con.close()
     return res
+
+def db_get_vacancy_info(name):
+    con = psycopg2.connect(host=host, user=user, password=password, database=database,port=port)
+    cur = con.cursor()
+    cur.execute('SELECT id FROM vacancies WHERE vacancy_name=%s', (name,))
+    res = cur.fetchone()
+    cur.close()
+    con.close()
+    return res
