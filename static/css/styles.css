@@ -1,0 +1,8 @@
+    .w-50 {
+        max-width: 300px;
+        /* Установите здесь необходимую ширину */
+    }
+
+    .justify-content-center {
+        justify-content: center;
+    }

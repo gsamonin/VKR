@@ -23,3 +23,6 @@ def db_get_vacancy_info(id):
     cur.close()
     con.close()
     return res
+
+
+
