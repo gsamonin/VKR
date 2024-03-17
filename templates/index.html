@@ -47,7 +47,7 @@
         <div>
 
         </div>
-        <div style = "display: flex; flex-direction: row">
+        <div style="display: flex; flex-direction: row">
             <div>
                 <span class="fs-4 ">Диаграмма самых популярных вакансий</span>
             </div>
@@ -214,7 +214,37 @@
     chartSkills.render();
 
     //Диаграммs в модальном окне с навыками
-
+    $.ajax({
+        url: '/getDick',
+        method: 'POST',
+        type: 'POST',
+        data: dataF,
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        success: function (data) {
+            if (data.header == "Fail") {
+                window.location.href = '/' + dopUrl + '/login';
+            }
+            console.log(data)
+            for (let i = 0; i < data.questions.length; i++) {
+                questionStaticList.add(data.questions[i])
+            }
+            var finalEndPage
+            var tmpEndPage = data.uniCount
+            if (tmpEndPage <= 10) { finalEndPage = 1 }
+            else {
+                var tmpMod = tmpEndPage % 10
+                tmpEndPage = (tmpEndPage - tmpMod) / 10
+                if (tmpMod != 0) { tmpEndPage += 1 }
+                finalEndPage = tmpEndPage
+            }
+            pageCountQuestionStatic = finalEndPage
+            $('#endPageValQuestionStatic').html(finalEndPage)
+            $('#allCountQuestionStatic').html('{{pageTranslate.questionCount}}' + data.allCount)
+            $('#uniCountQuestionStatic').html('{{pageTranslate.uniQuestionCount}}' + data.uniCount)
+            $('#loadingSpinnerQuestionStatic').css('display', 'none')
+        }
+    });
     var options2 = {
         series: [{
             name: 'Net Profit',
