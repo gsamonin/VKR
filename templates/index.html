@@ -47,7 +47,7 @@
         <div>
 
         </div>
-        <div style = "display: flex; flex-direction: row">
+        <div style="display: flex; flex-direction: row">
             <div>
                 <span class="fs-4 ">Диаграмма самых популярных вакансий</span>
             </div>
@@ -166,52 +166,96 @@
     var chart = new ApexCharts(document.querySelector("#chart"), options);
     chart.render();
 
-    var options1 = {
-        series: [44, 55, 13, 43, 22],
-        chart: {
-            width: 380,
-            type: 'pie',
-        },
-        labels: ['Team A', 'Team B', 'Team C', 'Team D', 'Team E'],
-        responsive: [{
-            breakpoint: 480,
-            options: {
-                chart: {
-                    width: 200
-                },
-                legend: {
-                    position: 'bottom'
-                }
-            }
-        }]
-    };
 
-    var chartPie = new ApexCharts(document.querySelector("#chartPie"), options1);
-    chartPie.render();
+    //Топ 5 самых популярных вакансий
+    var seriesTop5
+    var labelsTop5
+    $.ajax({
+        type: 'GET',
+        url: '/vacancies5',
+        contentType: 'application/json;charset=UTF-8',
+        success: function (response) {
+            console.log(response)
+            var data = response['vacanciesTop5']
+            seriesTop5 = []
+            labelsTop5 = []
+            for (var i = 0; i < data.length; i++) {
+                seriesTop5[i] = data[i][2]
+                labelsTop5[i] = data[i][1]
+            }
+            var optionsVacancies = {
+                series: seriesTop5,
+                chart: {
+                    width: 650,
+                    type: 'pie',
+                },
+                labels: labelsTop5,
+                responsive: [{
+                    breakpoint: 480,
+                    options: {
+                        chart: {
+                            width: 200
+                        },
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }]
+            };
+            console.log(optionsVacancies)
+            var chartPie = new ApexCharts(document.querySelector("#chartPie"), optionsVacancies);
+            chartPie.render();
+        },
+        error: function (response) {
+            console.log(response)
+        }
+    })
 
     // Топ 10 популярных навыков
 
-    var optionsSkills = {
-        series: [44, 55, 41, 17, 15, 94, 84, 16, 115, 30],
-        chart: {
-            type: 'donut',
-            width: 380
-        },
-        responsive: [{
-            breakpoint: 480,
-            options: {
-                chart: {
-                    width: 200
-                },
-                legend: {
-                    position: 'bottom'
-                }
+    var new_series
+    var new_labels
+    $.ajax({
+        type: 'GET',
+        url: '/top10',
+        contentType: 'application/json;charset=UTF-8',
+        success: function (response) {
+            console.log(response)
+            var data = response['vacancySkillsTop10']
+            new_series = []
+            new_labels = []
+            for (var i = 0; i < data.length; i++) {
+                new_series[i] = data[i][2]
+                new_labels[i] = data[i][0]
             }
-        }]
-    };
+            var optionsSkills = {
+                series: new_series,
+                chart: {
+                    type: 'donut',
+                    width: 650
+                },
+                labels: new_labels,
+                responsive: [{
+                    breakpoint: 480,
+                    options: {
+                        chart: {
+                            width: 200
+                        },
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }]
+            };
+            console.log(optionsSkills)
+            var chartSkills = new ApexCharts(document.querySelector("#chartSkills"), optionsSkills);
+            chartSkills.render();
 
-    var chartSkills = new ApexCharts(document.querySelector("#chartSkills"), optionsSkills);
-    chartSkills.render();
+        },
+        error: function (response) {
+            console.log(response)
+        }
+    })
 
     //Диаграммs в модальном окне с навыками
 
