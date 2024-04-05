@@ -45,6 +45,23 @@ CREATE table vacancy_skills(
     FOREIGN KEY (fk_skills) REFERENCES skills (id)
 );
 
+CREATE table courses(
+    id bigserial NOT NULL PRIMARY KEY,
+    fk_vacancy serial4,
+    course_name varchar(255),
+    course_org varchar(255),
+    course_price int,
+    course_rating real,
+    FOREIGN KEY (fk_vacancy) REFERENCES vacancies (id)
+);
+
+create table programms(
+	id bigserial NOT NULL PRIMARY KEY,
+    programm_name varchar(255),
+    programm_count_free int,
+    programm_count_paid int
+);
+
 -----------------------------------------------------
 
 INSERT INTO public.cities

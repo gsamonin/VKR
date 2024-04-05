@@ -33,41 +33,39 @@
             <input id="SearchVacancy" type="search" class="form-control mr-sm-2 w-50 shadow-sm"
                 placeholder="Введите вакансию" aria-label="Search">
             <div class="input-group-append">
-                <button class="btn btn-primary" onclick="Search()" type="submit" data-bs-toggle="modal"
-                    data-bs-target="#staticBackdrop">Поиск</button>
+                <button class="btn btn-primary" onclick="Search()" type="submit">Поиск</button>
             </div>
         </div>
     </div>
 
-    <div class='container-fluid'>
-        <div>
-            <span class="fs-4">Диаграмма спроса вакансий и средней зарплаты</span>
+    <div class="container-fluid py-4">
+        <div class="mb-4 shadow p-3 mb-5 bg-body rounded">
+            <h2 class="fs-4">Диаграмма средней заработной платы по вакансиям</h2>
+            <div id="chart"></div>
         </div>
-        <div id="chart"></div>
-        <div>
-
-        </div>
-        <div style="display: flex; flex-direction: row">
-            <div>
-                <span class="fs-4 ">Диаграмма самых популярных вакансий</span>
+        <div class="row mt-5">
+            <div class="col-md-6 mb-4">
+                <div class="shadow p-3 mb-5 bg-body rounded">
+                    <h2 class="fs-4">Диаграмма самых популярных вакансий</h2>
+                    <div id="chartPie"></div>
+                </div>
             </div>
-            <div id="chartPie"></div>
-            <div>
-                <span class="fs-4 ">Топ 10 популярных навыков hh.ru</span>
+            <div class="col-md-6 mb-4">
+                <div class="shadow p-3 mb-5 bg-body rounded">
+                    <h2 class="fs-4">Топ 10 популярных навыков на hh.ru</h2>
+                    <div id="chartSkills"></div>
+                </div>
             </div>
-            <div id="chartSkills"></div>
         </div>
     </div>
+    
+    <footer class="container-fluid py-3 bg-light">
+        <div class="text-center">
+            <span class="text-muted">Создатель: Самонин Георгий</span>
+        </div>
+    </footer>
 
-    <div class="container">
-        <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-2 border-top text-center">
-            <div class="col-12 align-content-center">
-                <span class="text-muted">Создатель Самонин Георгий</span>
-            </div>
-        </footer>
-    </div>
-
-    <!-- Модальное окно -->
+    <!-- Модальное окно УСПЕХ -->
     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-xl">
@@ -78,25 +76,65 @@
                 </div>
                 <div class="modal-body">
                     <h3 class="fs-4" id="vacancyName"></h3>
-                    <div id="chart2"></div>
-                    <div class="row mb-2">
-                        <div class="col-md-6">
-                            <div id="chartSalary"></div>
+                    <div class="modal-content-container my-4">
+                        <div class="shadow p-3 mb-5 bg-body rounded">
+                            <span class="fs-4">Самые популярные навыки:</span>
+                            <div id="chart2"></div>
                         </div>
-                        <div class="col-md-6">
-                            <label>Минимальная заработная плата: {min}</label>
-                            <label>Максимальная заработная плата: {max}</label>
-                            <label>Средняя заработная плата: {min}</label>
+                        <div class="pb-3"></div>
+                        <div class="row gx-5">
+                            <div class="col-6">
+                                <div class="shadow p-3 mb-5 bg-body rounded">
+                                    <div id="chartSalary"></div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="col shadow p-3 mb-5 bg-body rounded">
+                                    <div id="chartModal"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                    <div class="shadow p-3 mb-5 bg-body rounded  my-4">
+                        <span class="fs-4">Курсы по данной вакансии:</span>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">№</th>
+                                    <th scope="col">Название</th>
+                                    <th scope="col">Организация</th>
+                                    <th scope="col">Цена</th>
+                                    <th scope="col">Рейтинг</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableCourses">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Модальное окно ПРОВАЛ -->
+    <div class="modal" tabindex="-1" id="staticBackdropError">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Искомая вакансия не найдена</h5>
+                </div>
+                <div class="modal-body">
+                    <p>Вероятнее всего вы ввели название вакансии с ошибкой или же по искомой вакансии нет данных.</p>
                 </div>
                 <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Закрыть</button>
                 </div>
             </div>
         </div>
     </div>
-
-
 
 </body>
 <script src="./static/js/main.js"></script>
@@ -111,61 +149,81 @@
 
     // Диаграммы на главное странице сайта
 
-    var options = {
-        series: [{
-            name: '',
-            data: [44, 55, 57, 56, 61, 58, 63, 60, 66]
-        }, {
-            name: 'Revenue',
-            data: [76, 85, 101, 98, 87, 105, 91, 114, 94]
-        }, {
-            name: 'Free Cash Flow',
-            data: [35, 41, 36, 26, 45, 48, 52, 53, 41]
-        }],
-        chart: {
-            type: 'bar',
-            height: 350
-        },
-        plotOptions: {
-            bar: {
-                horizontal: false,
-                columnWidth: '55%',
-                endingShape: 'rounded'
-            },
-        },
-        dataLabels: {
-            enabled: false
-        },
-        stroke: {
-            show: true,
-            width: 2,
-            colors: ['transparent']
-        },
-        xaxis: {
-            categories: ['Вакансия', 'Вакансия', 'Вакансия', 'Вакансия', 'Вакансия', 'Вакансия', 'Вакансия', 'Вакансия', 'Вакансия'],
-        },
-        yaxis: {
-            title: {
-                text: '$ (thousands)'
+    // var seriesTop5
+    // var labelsTop5 
+    var xAxisVac
+    var vacDataAvgSal
+    $.ajax({
+        type: 'GET',
+        url: '/avgVacSallary',
+        contentType: 'application/json;charset=UTF-8',
+        success: function (response) {
+            console.log(response)
+            var data = response['avgSallary']
+            xAxisVac = []
+            vacDataAvgSal = []
+            for (var i = 0; i < data.length; i++) {
+                xAxisVac[i] = data[i][0]
+                vacDataAvgSal[i] = data[i][2]
             }
-        },
-        fill: {
-            opacity: 1
-        },
-        tooltip: {
-            y: {
-                formatter: function (val) {
-                    return "$ " + val + " thousands"
+            var optionsVacanciesSallary = {
+                series: [{
+                    name: 'Средняя заработная плата',
+                    data: vacDataAvgSal
+                    // }, {
+                    //     name: 'Revenue',
+                    //     data: [76, 85, 101, 98, 87, 105, 91, 114, 94]
+                    // }, {
+                    //     name: 'Free Cash Flow',
+                    //     data: [35, 41, 36, 26, 45, 48, 52, 53, 41]
+                    // 
                 }
-            }
+                ],
+                chart: {
+                    type: 'bar',
+                    height: 350
+                },
+                plotOptions: {
+                    bar: {
+                        horizontal: false,
+                        columnWidth: '55%',
+                        endingShape: 'rounded'
+                    },
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    show: true,
+                    width: 2,
+                    colors: ['transparent']
+                },
+                xaxis: {
+                    categories: xAxisVac,
+                },
+                yaxis: {
+                    title: {
+                        text: 'Заработтная плата'
+                    }
+                },
+                fill: {
+                    opacity: 1
+                },
+                tooltip: {
+                    y: {
+                        formatter: function (val) {
+                            return "" + val + "₽"
+                        }
+                    }
+                }
+            };
+
+            var chart = new ApexCharts(document.querySelector("#chart"), optionsVacanciesSallary);
+            chart.render();
+
         }
-    };
-
-    //
-
-    var chart = new ApexCharts(document.querySelector("#chart"), options);
-    chart.render();
-
+    }
+    )
 
     //Топ 5 самых популярных вакансий
     var seriesTop5
@@ -256,176 +314,27 @@
             console.log(response)
         }
     })
+    // диаграммы в диалоговом окне для тестирования 
 
-    //Диаграммs в модальном окне с навыками
-    $.ajax({
-        url: '/getDick',
-        method: 'POST',
-        type: 'POST',
-        data: dataF,
-        contentType: 'application/json; charset=utf-8',
-        dataType: 'json',
-        success: function (data) {
-            if (data.header == "Fail") {
-                window.location.href = '/' + dopUrl + '/login';
-            }
-            console.log(data)
-            for (let i = 0; i < data.questions.length; i++) {
-                questionStaticList.add(data.questions[i])
-            }
-            var finalEndPage
-            var tmpEndPage = data.uniCount
-            if (tmpEndPage <= 10) { finalEndPage = 1 }
-            else {
-                var tmpMod = tmpEndPage % 10
-                tmpEndPage = (tmpEndPage - tmpMod) / 10
-                if (tmpMod != 0) { tmpEndPage += 1 }
-                finalEndPage = tmpEndPage
-            }
-            pageCountQuestionStatic = finalEndPage
-            $('#endPageValQuestionStatic').html(finalEndPage)
-            $('#allCountQuestionStatic').html('{{pageTranslate.questionCount}}' + data.allCount)
-            $('#uniCountQuestionStatic').html('{{pageTranslate.uniQuestionCount}}' + data.uniCount)
-            $('#loadingSpinnerQuestionStatic').css('display', 'none')
-        }
-    });
-    var options2 = {
-        series: [{
-            name: 'Net Profit',
-            data: [44, 55, 57, 56, 61, 58, 63, 60, 66]
-        }, {
-            name: 'Revenue',
-            data: [76, 85, 101, 98, 87, 105, 91, 114, 94]
-        }, {
-            name: 'Free Cash Flow',
-            data: [35, 41, 36, 26, 45, 48, 52, 53, 41]
-        }],
-        chart: {
-            type: 'bar',
-            height: 350
-        },
-        plotOptions: {
-            bar: {
-                horizontal: false,
-                columnWidth: '55%',
-                endingShape: 'rounded'
-            },
-        },
-        dataLabels: {
-            enabled: false
-        },
-        stroke: {
-            show: true,
-            width: 2,
-            colors: ['transparent']
-        },
-        xaxis: {
-            categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
-        },
-        yaxis: {
-            title: {
-                text: '$ (thousands)'
-            }
-        },
-        fill: {
-            opacity: 1
-        },
-        tooltip: {
-            y: {
-                formatter: function (val) {
-                    return "$ " + val + " thousands"
-                }
-            }
-        }
-    };
+    // var optionsModal = {
+    //     series: [{
+    //         name: 'Series 1',
+    //         data: [80, 50, 30, 40, 100, 20],
+    //     }],
+    //     chart: {
+    //         height: 350,
+    //         type: 'radar',
+    //     },
+    //     title: {
+    //         text: 'Basic Radar Chart'
+    //     },
+    //     xaxis: {
+    //         categories: ['January', 'February', 'March', 'April', 'May', 'June']
+    //     }
+    // };
 
-    var chart2 = new ApexCharts(document.querySelector("#chart2"), options2);
-    chart2.render();
-
-
-    // Диаграмма заработной платы в модальном окне
-    var optionsSalary = {
-        series: [{
-            name: 'Inflation',
-            data: [35000, 90000, 62500]
-        }],
-        chart: {
-            height: 350,
-            type: 'bar',
-        },
-        plotOptions: {
-            bar: {
-                borderRadius: 10,
-                dataLabels: {
-                    position: 'top', // top, center, bottom
-                },
-            }
-        },
-        dataLabels: {
-            enabled: true,
-            formatter: function (val) {
-                return val + "  Руб.";
-            },
-            offsetY: -20,
-            style: {
-                fontSize: '12px',
-                colors: ["#304758"]
-            }
-        },
-
-        xaxis: {
-            categories: ["Min", "Max", "Avg"],
-            position: 'top',
-            axisBorder: {
-                show: false
-            },
-            axisTicks: {
-                show: false
-            },
-            crosshairs: {
-                fill: {
-                    type: 'gradient',
-                    gradient: {
-                        colorFrom: '#D8E3F0',
-                        colorTo: '#BED1E6',
-                        stops: [0, 100],
-                        opacityFrom: 0.4,
-                        opacityTo: 0.5,
-                    }
-                }
-            },
-            tooltip: {
-                enabled: true,
-            }
-        },
-        yaxis: {
-            axisBorder: {
-                show: false
-            },
-            axisTicks: {
-                show: false,
-            },
-            labels: {
-                show: false,
-                formatter: function (val) {
-                    return val + " Руб.";
-                }
-            }
-
-        },
-        title: {
-            text: 'Monthly Inflation in Argentina, 2002',
-            floating: true,
-            offsetY: 330,
-            align: 'center',
-            style: {
-                color: '#444'
-            }
-        }
-    };
-
-    var chartSalary = new ApexCharts(document.querySelector("#chartSalary"), optionsSalary);
-    chartSalary.render();
+    // var chartModal = new ApexCharts(document.querySelector("#chartModal"), optionsModal);
+    // chartModal.render();
 
 </script>
 

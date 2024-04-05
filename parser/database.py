@@ -67,3 +67,33 @@ def db_get_vacancy_info(name):
     cur.close()
     con.close()
     return res
+
+def db_save_programms(programm):
+    con = psycopg2.connect(host=host, user=user, password=password, database=database,port=port)
+    cur = con.cursor()
+    try:
+        programmName = programm.find('h2', class_='list__h').find('a').text
+        programmPaid = int(programm.find('span', class_='visible-mid', string=['Платных мест 2024', 'Платных мест 2023', 'Платных мест 0']).find_next().text.lstrip().replace(' ', ''))
+        programmFree = int(programm.find('span', class_='visible-mid', string=['Бюджетных мест 2024', 'Бюджетных мест 2023', 'Бюджетных мест 0']).find_next().text.lstrip().replace(' ', ''))
+        cur.execute('INSERT INTO programms (programm_name, programm_count_free, programm_count_paid) VALUES(%s,%s,%s)', (programmName, programmFree, programmPaid)) 
+    except Exception:
+        pass
+    con.commit() 
+    cur.close()
+    con.close()
+    
+def db_save_courses(course):
+    con = psycopg2.connect(host=host, user=user, password=password, database=database,port=port)
+    cur = con.cursor()
+    try:
+        course_name = course.find('div', class_='style_heading__WaLQK style_headingTopPadding__sB1tl _ptw42j').string
+        organization_name = course.find('img', class_='style_logo__r1hDN style_logoBorder__xa_Xd').get('title')
+        price = int(course.find('div', class_='style_price__vSy5p').find('span', class_='style_nowrap__12nI5 _1qco5vz _18gj9po').text.lstrip().replace(u'\xa0', '').replace('₽', ''))
+        rating = float(course.find('span', class_='style_wrapper__Q5XQE').find('span', class_='').text)
+        cur.execute('INSERT INTO courses (course_name, fk_vacancy, course_org, course_price, course_rating) VALUES(%s,%s,%s,%s,%s)', (course_name, 1, organization_name, price, rating)) 
+        con.commit()
+    except Exception as e:
+        print(e)
+    # con.commit() 
+    cur.close()
+    con.close()

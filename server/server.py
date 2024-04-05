@@ -21,7 +21,15 @@ async def search(data = Body()):
     vacancy_id = db_get_vacancy_id(data['search'])
     vacancy_info = db_get_vacancy_info(vacancy_id)
     print(vacancy_info)
-    return {'vacancy_info': vacancy_info, 'vacancy_name': data['search']}
+    vacSkills = dbGetSkillsByVac(vacancy_id)
+    print(vacSkills)
+    vacSall = dbGetSallaryInDiagVac(vacancy_id)
+    print(vacSall)
+    coursesVac = dbGetCourses(vacancy_id)
+    print(coursesVac)
+    vacCities = dbGetCitiesByVac(vacancy_id)
+    print(vacCities)
+    return {'vacancy_info': vacancy_info, 'vacancy_name': data['search'], 'vacSkills': vacSkills, 'vacSall': vacSall, 'coursesVac': coursesVac, 'vacCities':vacCities}
 
 @app.get('/top10')
 async def top10():
@@ -34,6 +42,12 @@ async def vacancies5():
     vacanciesTop5 = db_get_vacancy_top5(id)
     print(vacanciesTop5)
     return {'vacanciesTop5': vacanciesTop5}
+
+@app.get('/avgVacSallary')
+async def avgVacSallary():
+    avgSallary = dbGetAvgSallaryAndVac()
+    print(avgSallary)
+    return {'avgSallary': avgSallary}
 
 if __name__ == "__main__":
     uvicorn.run(app, host="localhost", port=8000)

@@ -2,6 +2,8 @@ import requests
 import time
 import random
 from database import *
+from bs4 import BeautifulSoup
+from time import sleep
 import traceback
 from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
@@ -43,6 +45,7 @@ def parse_vacancies():
             try:
                 # Парсим страницы с вакансиями
                 while True:
+                    if page == 5: break
                     data = get_vacancies(city_id[1], city_id[0], vacancy[1], page)
                     if not data.get('items'):
                             break
@@ -55,9 +58,52 @@ def parse_vacancies():
             except Exception:
                 print('Test')
                 traceback.print_exc()
+
+def parse_programms():
+    for p in range (1, 32): #32
+        print(p)
+        
+        url = f"https://postupi.online/professiya/razrabotchik/programmi/?page_num={p}"
+        r =requests.get(url)
+        sleep(3) 
+        soup = BeautifulSoup(r.text, 'lxml')
+
+        programms = soup.find_all('div', class_='list__info')
+
+        for programm in programms:
+            # db_save_programms(programm)
+            print(programm.find('h2', class_='list__h').find('a').text)
+            print('Бюджетных мест: '+programm.find('span', class_='visible-mid', string=['Бюджетных мест 2024', 'Бюджетных мест 2023', 'Бюджетных мест 0']).find_next().text.lstrip())
+            print('Платных мест: '+programm.find('span', class_='visible-mid', string=['Платных мест 2024', 'Платных мест 2023', 'Платных мест 0']).find_next().text.lstrip())
+        
+def parse_courses():
+    CourseNames = ["languagePython", "languageJava","languageCPlusPlus","languageGo", "languageOneS", "languageRuby", "languageCSharp", "languageSwift", "languagePHP", "android", "front", "back"]
+    for name in CourseNames:
+        print('@@@@@@@@@@@'+ name)
+        url = f"https://www.sravni.ru/kursy/programmirovanie/?coursesThematics={name}&courseLevels=beginner&courseLevels=advanced"
+        r =requests.get(url)
+        soup = BeautifulSoup(r.text, 'lxml')
+        
+        courses = soup.find('div', class_='style_wrapperRows__XOdZm').find_all('div', class_='style_wrapper__JdiJD')
+        
+        for course in courses:
+            try:
+                db_save_courses(course)
+                course_name = course.find('div', class_='style_heading__WaLQK style_headingTopPadding__sB1tl _ptw42j').string
+                organization_name = course.find('img', class_='style_logo__r1hDN style_logoBorder__xa_Xd').get('title')
+                price = int(course.find('div', class_='style_price__vSy5p').find('span', class_='style_nowrap__12nI5 _1qco5vz _18gj9po').text.lstrip().replace(u'\xa0', '').replace('₽', ''))
+                rating = float(course.find('span', class_='style_wrapper__Q5XQE').find('span', class_='').text)
                 
-# Вызываем функцию парсинга вакансий                
+                print("Название курса:", course_name)
+                print("Название организации:", organization_name)
+                print("Цена:", price)
+                print("Рейтинг:", rating)
+                print("-" * 50)
+            except Exception:
+                pass 
+    
 parse_vacancies()
+# Вызываем функцию парсинга вакансий                
 
 
 
